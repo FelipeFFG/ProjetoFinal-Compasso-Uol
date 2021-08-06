@@ -22,33 +22,32 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 
-
-fun ajustatempo(previsao: String)= do{
+fun ajustaCondicaoTempo(payload: String)= do{
     var tempomudado=
-    if (previsao contains('rain'))
+    if (payload contains('rain'))
          "chuva"
     else
-    if(previsao contains('clear_day'))
+    if(payload contains('clear_day'))
          "Tempo Limpo"
     else
         "Tempo Nublado"
     ---
     tempomudado
 }
+
 ---
 {
 	cidade: payload.cidade,
-	condicao_tempo: payload.condicao_tempo,
+	condicao_tempo: ajustaCondicaoTempo(payload.condicao_tempo),
 	nome_cidade: payload.nome_cidade,
 	previsao: payload.previsao map ( previsao , indexOfPrevisao ) -> {
 		data: previsao.date,
 		semana: previsao.weekday,
 		maxima: previsao.max,
 		minima: previsao.min,
-		condicao: ajustatempo(previsao.condition)
+		condicao: ajustaCondicaoTempo(previsao.condition)
 	}
 }
-
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>

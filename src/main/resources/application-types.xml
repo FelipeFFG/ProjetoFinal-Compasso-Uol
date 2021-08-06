@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="dadosNaoTratados" format="json">
+      <types:shape format="weave" example="examples/exemplo.json"><![CDATA[%dw 2.0
+
+type dadosNaoTratados = {|
+  cidade: String, 
+  condicao_tempo: String, 
+  nome_cidade: String, 
+  previsao: Array<{|    date: String,     weekday: String,     max: Number {"typeId": "int"},     min: Number {"typeId": "int"},     condition: String  |}>
+|} {"example": "{\\\"cidade\\\":\\\"Pelotas, RS\\\",\\\"condicao_tempo\\\":\\\"rain\\\",\\\"nome_cidade\\\":\\\"Pelotas\\\",\\\"previsao\\\":[{\\\"date\\\":\\\"26\\/07\\\",\\\"weekday\\\":\\\"Seg\\\",\\\"max\\\":18,\\\"min\\\":10,\\\"condition\\\":\\\"rain\\\"},{\\\"date\\\":\\\"27\\/07\\\",\\\"weekday\\\":\\\"Ter\\\",\\\"max\\\":10,\\\"min\\\":5,\\\"condition\\\":\\\"rain\\\"},{\\\"date\\\":\\\"28\\/07\\\",\\\"weekday\\\":\\\"Qua\\\",\\\"max\\\":7,\\\"min\\\":4,\\\"condition\\\":\\\"rain\\\"},{\\\"date\\\":\\\"29\\/07\\\",\\\"weekday\\\":\\\"Qui\\\",\\\"max\\\":11,\\\"min\\\":3,\\\"condition\\\":\\\"clear_day\\\"},{\\\"date\\\":\\\"30\\/07\\\",\\\"weekday\\\":\\\"Sex\\\",\\\"max\\\":13,\\\"min\\\":2,\\\"condition\\\":\\\"clear_day\\\"},{\\\"date\\\":\\\"31\\/07\\\",\\\"weekday\\\":\\\"S\u00E1b\\\",\\\"max\\\":17,\\\"min\\\":6,\\\"condition\\\":\\\"clear_day\\\"},{\\\"date\\\":\\\"01\\/08\\\",\\\"weekday\\\":\\\"Dom\\\",\\\"max\\\":14,\\\"min\\\":8,\\\"condition\\\":\\\"cloudly_day\\\"},{\\\"date\\\":\\\"02\\/08\\\",\\\"weekday\\\":\\\"Seg\\\",\\\"max\\\":14,\\\"min\\\":10,\\\"condition\\\":\\\"rain\\\"},{\\\"date\\\":\\\"03\\/08\\\",\\\"weekday\\\":\\\"Ter\\\",\\\"max\\\":17,\\\"min\\\":11,\\\"condition\\\":\\\"rain\\\"},{\\\"date\\\":\\\"04\\/08\\\",\\\"weekday\\\":\\\"Qua\\\",\\\"max\\\":14,\\\"min\\\":8,\\\"condition\\\":\\\"cloudly_day\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#c3b48a0d-1d53-4a81-b928-21279fe17258">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="dadosNaoTratados"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
