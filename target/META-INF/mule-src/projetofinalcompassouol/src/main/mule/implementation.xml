@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="implementation-main" doc:id="0546b339-29ba-4311-b53a-a7d293cfc62b" >
+		<flow-ref doc:name="BuscarDados  e Tratamento" doc:id="17d43087-7e28-4d36-b621-e08a241dbc40" name="implementation-BuscarDados-Tratamento"/>
+	</sub-flow>
+	<sub-flow name="implementation-BuscarDados-Tratamento" doc:id="1ae3e715-f88c-4b1a-b43c-04c790f65d36" >
+		<http:request method="GET" doc:name="BuscarDados" doc:id="a7f636a5-9947-467e-804e-438036652f66" config-ref="HTTP_Request_configuration" path="/mocking/api/v1/sources/exchange/assets/b33f157e-308e-40ff-b566-2592b2e9de02/projetofinal/1.0.0/m/findPredictTimeWeek" >
+			<http:headers ><![CDATA[#[output application/json
+---
+{
+	NomeDaCidade : attributes.headers.NomeDaCidade,
+	Estado : attributes.headers.Estado
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="TrataDados" doc:id="c3b48a0d-1d53-4a81-b928-21279fe17258" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+
+fun ajustatempo(previsao: String)= do{
+    var tempomudado=
+    if (previsao contains('rain'))
+         "chuva"
+    else
+    if(previsao contains('clear_day'))
+         "Tempo Limpo"
+    else
+        "Tempo Nublado"
+    ---
+    tempomudado
+}
+---
+{
+	cidade: payload.cidade,
+	condicao_tempo: payload.condicao_tempo,
+	nome_cidade: payload.nome_cidade,
+	previsao: payload.previsao map ( previsao , indexOfPrevisao ) -> {
+		data: previsao.date,
+		semana: previsao.weekday,
+		maxima: previsao.max,
+		minima: previsao.min,
+		condicao: ajustatempo(previsao.condition)
+	}
+}
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>
