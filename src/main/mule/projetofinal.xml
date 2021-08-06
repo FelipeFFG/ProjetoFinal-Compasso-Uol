@@ -5,7 +5,10 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
     <apikit:config name="projetofinal-config" api="resource::b33f157e-308e-40ff-b566-2592b2e9de02:projetofinal:1.0.0:raml:zip:projetofinal.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <flow name="projetofinal-main">
+    <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ca617e9d-4a59-43c6-8e77-dc47a13397d6" >
+		<http:request-connection host="anypoint.mulesoft.com" port="443" protocol="HTTPS"/>
+	</http:request-config>
+	<flow name="projetofinal-main">
         <http:listener config-ref="projetofinal-httpListenerConfig" path="/tempo/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
@@ -135,6 +138,22 @@ output application/java
 ---
 {
 }]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="GET" doc:name="Request" doc:id="cd7c7369-eeb4-4f25-a823-73b274551d1f" config-ref="HTTP_Request_configuration" path="/mocking/api/v1/sources/exchange/assets/b33f157e-308e-40ff-b566-2592b2e9de02/projetofinal/1.0.0/m/findPredictTimeWeek">
+			<http:headers ><![CDATA[#[output application/json
+---
+{
+	NomeDaCidade : attributes.headers.NomeDaCidade,
+	Estado : attributes.headers.Estado
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="e68095a3-ada8-4a88-9419-2c6a52018a7d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
