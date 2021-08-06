@@ -1,5 +1,6 @@
 {
   "configs": [
+    "implementation.xml",
     "projetofinal.xml"
   ],
   "secureProperties": [],
@@ -12,6 +13,7 @@
     "attributes": {
       "exportedPackages": [],
       "exportedResources": [
+        "implementation.xml",
         "log4j2.xml",
         "projetofinal.xml"
       ]
