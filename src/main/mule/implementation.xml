@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<flow-ref doc:name="BuscarDados  e Tratamento" doc:id="17d43087-7e28-4d36-b621-e08a241dbc40" name="implementation-BuscarDados-Tratamento"/>
 	</sub-flow>
 	<sub-flow name="implementation-BuscarDados-Tratamento" doc:id="1ae3e715-f88c-4b1a-b43c-04c790f65d36" >
-		<http:request method="GET" doc:name="BuscarDados" doc:id="a7f636a5-9947-467e-804e-438036652f66" config-ref="HTTP_Request_configuration" path="/mocking/api/v1/sources/exchange/assets/b33f157e-308e-40ff-b566-2592b2e9de02/projetofinal/1.0.0/m/findPredictTimeWeek" >
+		<http:request method="GET" doc:name="BuscarDados" doc:id="a7f636a5-9947-467e-804e-438036652f66" path="/mocking/api/v1/sources/exchange/assets/b33f157e-308e-40ff-b566-2592b2e9de02/projetofinal/1.0.0/m/findPredictTimeWeek" config-ref="HTTP_Request_configuration">
 			<http:headers ><![CDATA[#[output application/json
 ---
 {
@@ -17,9 +17,10 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	Estado : attributes.headers.Estado
 }]]]></http:headers>
 		</http:request>
-		<ee:transform doc:name="TrataDados" doc:id="c3b48a0d-1d53-4a81-b928-21279fe17258" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+		<try doc:name="Try" doc:id="54331521-5a56-488d-b638-fbbbf02f806a" >
+			<ee:transform doc:name="TrataDados" doc:id="c3b48a0d-1d53-4a81-b928-21279fe17258">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 
 fun ajustaCondicaoTempo(payload: String)= do{
@@ -51,5 +52,21 @@ fun ajustaCondicaoTempo(payload: String)= do{
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+			<set-variable value="" doc:name="dadosFiltrados" doc:id="bc5f1ef5-8048-4f60-bac3-af25b337226f" variableName="dadosFiltrados"/>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5487d9e3-79dd-4b1f-a10e-5995503e4ad3" >
+					<ee:transform doc:name="Transform Message" doc:id="d0349541-34b7-4c65-a0e6-f90a43a7aced" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"mensagem": error.description
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
 	</sub-flow>
 </mule>
