@@ -7,13 +7,10 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
 http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd">
-	<ftp:config name="FTP_Config" doc:name="FTP Config" doc:id="0813bcef-1420-4f59-b7c2-3b3fa9e94f50" >
-		<ftp:connection host="files.000webhost.com" username="projetofinalcompassouol" password="21061899" />
-	</ftp:config>
 	<sub-flow name="implementation-main" doc:id="0546b339-29ba-4311-b53a-a7d293cfc62b" >
 		<flow-ref doc:name="BuscarDados  e Tratamento" doc:id="17d43087-7e28-4d36-b621-e08a241dbc40" name="implementation-BuscarDados-Tratamento"/>
 		<flow-ref doc:name="ConverterDadosParaCSV" doc:id="0e7e9f9c-4948-4f92-86c9-583575c9cee3" name="implementation-converter-csv"/>
-		<flow-ref doc:name="Flow Reference" doc:id="00d84f9d-da2e-4d3b-8759-39d53ff70d4a" name="ftp"/>
+		<flow-ref doc:name="Enviar CSV para FTP" doc:id="00d84f9d-da2e-4d3b-8759-39d53ff70d4a" name="implementation-enviar-para-ftp"/>
 		<ee:transform doc:name="DadosFiltrados" doc:id="6049cfa6-7166-4fc0-8baa-70bea4cbb5f0" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -71,9 +68,9 @@ fun ajustaCondicaoTempo(payload: String)= do{
 			<set-variable value="#[payload]" doc:name="dadosFiltrados" doc:id="bc5f1ef5-8048-4f60-bac3-af25b337226f" variableName="dadosFiltrados"/>
 			<error-handler >
 				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5487d9e3-79dd-4b1f-a10e-5995503e4ad3" >
-					<ee:transform doc:name="Transform Message" doc:id="d0349541-34b7-4c65-a0e6-f90a43a7aced" >
-						<ee:message >
-							<ee:set-payload ><![CDATA[%dw 2.0
+					<ee:transform doc:name="Transform Message" doc:id="d0349541-34b7-4c65-a0e6-f90a43a7aced">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
@@ -99,9 +96,9 @@ payload]]></ee:set-payload>
 		<file:write doc:name="Write" doc:id="ec582226-3b61-4b90-8c7d-eca8e630fd75" path="projetoFinal.csv" config-ref="File_Config">
 		</file:write>
 	</sub-flow>
-	<sub-flow name="ftp" doc:id="a6b7d95c-891a-40d8-bb13-1960c7eca27a" >
+	<sub-flow name="implementation-enviar-para-ftp" doc:id="a6b7d95c-891a-40d8-bb13-1960c7eca27a">
 		<ftp:write doc:name="Write" doc:id="334b0709-ce32-4845-8233-1b337f7ead9e" config-ref="FTP_Config" path="projetoFinal.csv">
-			<ftp:content ><![CDATA[#[vars.dados_csv]]]></ftp:content>
+			<ftp:content><![CDATA[#[vars.dados_csv]]]></ftp:content>
 		</ftp:write>
 	</sub-flow>
 </mule>

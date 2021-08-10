@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd">
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="d4ffa6c4-41b8-4730-a4b1-3c9c3985cfbb" >
 		<http:request-connection protocol="HTTPS" host="anypoint.mulesoft.com" port="443" />
 	</http:request-config>
 	<file:config name="File_Config" doc:name="File Config" doc:id="402c4039-d1bb-4e66-9244-ab2b2904d444" >
-		<file:connection workingDir="C:\Users\jhoni\Área de Trabalho" />
+		<file:connection workingDir="C:\Users\Felipe\Desktop" />
 	</file:config>
+	<ftp:config name="FTP_Config" doc:name="FTP Config" doc:id="a7393c93-dc28-47f0-be7f-45c5f617e2a7" >
+		<ftp:connection host="files.000webhost.com" username="projetofinalcompassouol" password="projetocompasso" />
+	</ftp:config>
 	<error-handler name="globalError_Handler" doc:id="7c7b920d-b63d-4b92-a9bd-2fdc1e9e3ea1" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_On Error Propagate" doc:id="9f1bbdf5-b2e6-479b-9cbd-315d67a5f5be" type="APIKIT:BAD_REQUEST" >
 			<ee:transform doc:name="Copy_of_Transform Message" doc:id="2d95f492-d7e8-4af7-82b7-6491c86277d7" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
