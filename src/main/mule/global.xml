@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/fil
 		<http:request-connection protocol="HTTPS" host="anypoint.mulesoft.com" port="443" />
 	</http:request-config>
 	<file:config name="File_Config" doc:name="File Config" doc:id="402c4039-d1bb-4e66-9244-ab2b2904d444" >
-		<file:connection workingDir="C:\Users\Felipe\Desktop" />
+		<file:connection workingDir="C:\Users\jhoni\Área de Trabalho" />
 	</file:config>
 	<error-handler name="globalError_Handler" doc:id="7c7b920d-b63d-4b92-a9bd-2fdc1e9e3ea1" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_On Error Propagate" doc:id="9f1bbdf5-b2e6-479b-9cbd-315d67a5f5be" type="APIKIT:BAD_REQUEST" >
