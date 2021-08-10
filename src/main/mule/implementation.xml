@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
 	<sub-flow name="implementation-main" doc:id="0546b339-29ba-4311-b53a-a7d293cfc62b" >
 		<flow-ref doc:name="BuscarDados  e Tratamento" doc:id="17d43087-7e28-4d36-b621-e08a241dbc40" name="implementation-BuscarDados-Tratamento"/>
+		<flow-ref doc:name="ConverterDadosParaCSV" doc:id="0e7e9f9c-4948-4f92-86c9-583575c9cee3" name="implementation-converter-csv"/>
+		<ee:transform doc:name="DadosFiltrados" doc:id="6049cfa6-7166-4fc0-8baa-70bea4cbb5f0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.dadosFiltrados
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="implementation-BuscarDados-Tratamento" doc:id="1ae3e715-f88c-4b1a-b43c-04c790f65d36" >
 		<http:request method="GET" doc:name="BuscarDados" doc:id="a7f636a5-9947-467e-804e-438036652f66" path="/mocking/api/v1/sources/exchange/assets/b33f157e-308e-40ff-b566-2592b2e9de02/projetofinal/1.0.0/m/findPredictTimeWeek" config-ref="HTTP_Request_configuration">
@@ -52,7 +63,7 @@ fun ajustaCondicaoTempo(payload: String)= do{
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-			<set-variable value="" doc:name="dadosFiltrados" doc:id="bc5f1ef5-8048-4f60-bac3-af25b337226f" variableName="dadosFiltrados"/>
+			<set-variable value="#[payload]" doc:name="dadosFiltrados" doc:id="bc5f1ef5-8048-4f60-bac3-af25b337226f" variableName="dadosFiltrados"/>
 			<error-handler >
 				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5487d9e3-79dd-4b1f-a10e-5995503e4ad3" >
 					<ee:transform doc:name="Transform Message" doc:id="d0349541-34b7-4c65-a0e6-f90a43a7aced" >
@@ -68,5 +79,18 @@ output application/json
 				</on-error-continue>
 			</error-handler>
 		</try>
+		<set-payload value="#[payload.previsao]" doc:name="Set Payload" doc:id="3f4faac7-d18d-45a6-ab4e-59dbcc9844cc" />
+	</sub-flow>
+	<sub-flow name="implementation-converter-csv" doc:id="3f56fad8-fc9e-4370-b35d-9ee4108551b4" >
+		<ee:transform doc:name="Transform Message" doc:id="c7d497a0-c360-4313-a86e-c9f5c610d54d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<file:write doc:name="Write" doc:id="ec582226-3b61-4b90-8c7d-eca8e630fd75" path="projetoFinal.csv" config-ref="File_Config">
+		</file:write>
 	</sub-flow>
 </mule>

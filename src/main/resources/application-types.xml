@@ -13,6 +13,18 @@ type dadosNaoTratados = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="filtrados" format="json">
+      <types:shape format="weave" example="examples/Transformado.json"><![CDATA[%dw 2.0
+
+type filtrados = {|
+  cidade: String, 
+  condicao_tempo: String, 
+  nome_cidade: String, 
+  previsao: Array<{|    data: String,     semana: String,     maxima: Number {"typeId": "int"},     minima: Number {"typeId": "int"},     condicao: String  |}>
+|} {"example": "{\\\"cidade\\\":\\\"Pelotas, RS\\\",\\\"condicao_tempo\\\":\\\"chuva\\\",\\\"nome_cidade\\\":\\\"Pelotas\\\",\\\"previsao\\\":[{\\\"data\\\":\\\"26\\/07\\\",\\\"semana\\\":\\\"Seg\\\",\\\"maxima\\\":18,\\\"minima\\\":10,\\\"condicao\\\":\\\"chuva\\\"},{\\\"data\\\":\\\"27\\/07\\\",\\\"semana\\\":\\\"Ter\\\",\\\"maxima\\\":10,\\\"minima\\\":5,\\\"condicao\\\":\\\"chuva\\\"},{\\\"data\\\":\\\"28\\/07\\\",\\\"semana\\\":\\\"Qua\\\",\\\"maxima\\\":7,\\\"minima\\\":4,\\\"condicao\\\":\\\"chuva\\\"},{\\\"data\\\":\\\"29\\/07\\\",\\\"semana\\\":\\\"Qui\\\",\\\"maxima\\\":11,\\\"minima\\\":3,\\\"condicao\\\":\\\"Tempo Limpo\\\"},{\\\"data\\\":\\\"30\\/07\\\",\\\"semana\\\":\\\"Sex\\\",\\\"maxima\\\":13,\\\"minima\\\":2,\\\"condicao\\\":\\\"Tempo Limpo\\\"},{\\\"data\\\":\\\"31\\/07\\\",\\\"semana\\\":\\\"S\u00E1b\\\",\\\"maxima\\\":17,\\\"minima\\\":6,\\\"condicao\\\":\\\"Tempo Limpo\\\"},{\\\"data\\\":\\\"01\\/08\\\",\\\"semana\\\":\\\"Dom\\\",\\\"maxima\\\":14,\\\"minima\\\":8,\\\"condicao\\\":\\\"Tempo Nublado\\\"},{\\\"data\\\":\\\"02\\/08\\\",\\\"semana\\\":\\\"Seg\\\",\\\"maxima\\\":14,\\\"minima\\\":10,\\\"condicao\\\":\\\"chuva\\\"},{\\\"data\\\":\\\"03\\/08\\\",\\\"semana\\\":\\\"Ter\\\",\\\"maxima\\\":17,\\\"minima\\\":11,\\\"condicao\\\":\\\"chuva\\\"},{\\\"data\\\":\\\"04\\/08\\\",\\\"semana\\\":\\\"Qua\\\",\\\"maxima\\\":14,\\\"minima\\\":8,\\\"condicao\\\":\\\"Tempo Nublado\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#c3b48a0d-1d53-4a81-b928-21279fe17258">
     <types:processor-declaration>
@@ -21,6 +33,15 @@ type dadosNaoTratados = {|
           <types:payload type="dadosNaoTratados"/>
         </types:message>
       </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#6049cfa6-7166-4fc0-8baa-70bea4cbb5f0">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="filtrados"/>
+        </types:message>
+      </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
 </types:mule>

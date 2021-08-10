@@ -16,6 +16,7 @@
       "exportedResources": [
         "application-types.xml",
         "examples/exemplo.json",
+        "examples/Transformado.json",
         "global.xml",
         "implementation.xml",
         "log4j2.xml",
