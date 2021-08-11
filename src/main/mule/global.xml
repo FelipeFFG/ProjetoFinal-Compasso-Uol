@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/
 		<file:connection workingDir="C:\Users\Felipe\Desktop" />
 	</file:config>
 	<ftp:config name="FTP_Config" doc:name="FTP Config" doc:id="a7393c93-dc28-47f0-be7f-45c5f617e2a7" >
-		<ftp:connection host="files.000webhost.com" username="projetofinalcompassouol" password="projetocompasso" />
+		<ftp:connection host="files.000webhost.com" username="projetofinalcompassouol" password="projetocompasso" connectionTimeout="30" responseTimeout="30"/>
 	</ftp:config>
 	<error-handler name="globalError_Handler" doc:id="7c7b920d-b63d-4b92-a9bd-2fdc1e9e3ea1" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_On Error Propagate" doc:id="9f1bbdf5-b2e6-479b-9cbd-315d67a5f5be" type="APIKIT:BAD_REQUEST" >

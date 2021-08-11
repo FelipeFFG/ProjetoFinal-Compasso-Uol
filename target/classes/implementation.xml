@@ -67,7 +67,7 @@ fun ajustaCondicaoTempo(payload: String)= do{
 		</ee:transform>
 			<set-variable value="#[payload]" doc:name="dadosFiltrados" doc:id="bc5f1ef5-8048-4f60-bac3-af25b337226f" variableName="dadosFiltrados"/>
 			<error-handler >
-				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5487d9e3-79dd-4b1f-a10e-5995503e4ad3" >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5487d9e3-79dd-4b1f-a10e-5995503e4ad3">
 					<ee:transform doc:name="Transform Message" doc:id="d0349541-34b7-4c65-a0e6-f90a43a7aced">
 						<ee:message>
 							<ee:set-payload><![CDATA[%dw 2.0
@@ -97,8 +97,24 @@ payload]]></ee:set-payload>
 		</file:write>
 	</sub-flow>
 	<sub-flow name="implementation-enviar-para-ftp" doc:id="a6b7d95c-891a-40d8-bb13-1960c7eca27a">
-		<ftp:write doc:name="Write" doc:id="334b0709-ce32-4845-8233-1b337f7ead9e" config-ref="FTP_Config" path="projetoFinal.csv">
+		<try doc:name="Try" doc:id="b1ebcaf4-ba0a-4f92-bf0b-1e689d78e8d8" >
+			<ftp:write doc:name="Write" doc:id="334b0709-ce32-4845-8233-1b337f7ead9e" config-ref="FTP_Config" path="projetoFinal.csv">
 			<ftp:content><![CDATA[#[vars.dados_csv]]]></ftp:content>
 		</ftp:write>
+			<error-handler>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8e921d58-a601-4c05-b628-2215b5969c2a" >
+					<ee:transform doc:name="Transform Message" doc:id="ceb6b51b-80a2-4948-8dac-ee8877b2a21f" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"mensagem": error.description
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
 	</sub-flow>
 </mule>
